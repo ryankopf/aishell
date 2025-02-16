@@ -55,12 +55,31 @@ For fish shell, add the following to your `~/.config/fish/config.fish` file:
 aishell init fish | source
 ```
 
-## Old Notes
+## Manually build.
 
 Add to shell in `~/.bashrc` or `~/.zshrc`:
 
 ```sh
 eval "$(aishell init bash)"
+```
+
+You also have to add a function to enable the (Ctrl+T) functionality:
+
+```sh
+aishell_suggestion() {
+  local suggestion_file="/tmp/aishell_suggestion"
+  if [ -f "$suggestion_file" ]; then
+    fix=$(< "$suggestion_file")
+    rm -f "$suggestion_file"
+    # Put it on the current command line:
+    READLINE_LINE="$fix"
+    READLINE_POINT=${#fix}
+  else
+    echo "No suggestion available."
+  fi
+}
+# Bind Ctrl+T to that function
+bind -x '"\C-t":aishell_suggestion'
 ```
 
 Build and move the binary:
@@ -70,17 +89,3 @@ cargo build --release
 sudo mv target/release/aishell /usr/local/bin
 eval "$(aishell init bash)"  # Or zsh/fish
 ```
-
-## Function to initialize aishell error trap
-
-```sh
-init_aishell() {
-    if [ -n "$BASH_VERSION" ]; then
-        trap 'aishell "$BASH_COMMAND" "$?"' ERR
-    elif [ -n "$ZSH_VERSION" ]; then
-        trap 'aishell "$ZSH_COMMAND" "$?"' ERR
-    fi
-}
-
-# Initialize aishell
-init_aishell
