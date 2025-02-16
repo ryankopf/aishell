@@ -4,6 +4,12 @@
 
 ![Image of using it in your shell.](image.png)
 
+## Supported Environments
+
+1. Ubuntu using Bash
+
+** Feel free to submit PRs for other systems. **
+
 ## Installation
 
 To install `aishell` on Ubuntu using bash, follow these steps:
