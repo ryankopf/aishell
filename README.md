@@ -39,6 +39,11 @@ To install `aishell` on Ubuntu using bash, follow these steps:
     ./install.sh
     ```
 
+5. Set your OPENAI_API_KEY in your ~/.bashrc file, like:
+    ```sh
+    export OPENAI_API_KEY="sk-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAb11111111111111"
+    ```
+
 ## Usage
 
 To initialize `aishell` in your shell, add the following to your `~/.bashrc` or `~/.zshrc` file:

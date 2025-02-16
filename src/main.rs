@@ -23,8 +23,8 @@ fn main() {
             return;
         }
         init_shell(&args[1]);
-        if let None = env::var_os("HISTFILE") {
-            eprintln!("HISTFILE environment variable is not set.");
+        if let None = env::var_os("OPENAI_API_KEY") {
+            eprintln!("OPENAI_API_KEY environment variable is not set.");
         }
         return;
     }
