@@ -6,9 +6,13 @@
 
 ## Supported Environments
 
-1. Ubuntu using Bash
+1. Ubuntu using Bash with Starship
 
 ** Feel free to submit PRs for other systems. **
+
+## To Do
+
+1. Support more systems. Perhaps we can detect the length of the prompt to support prompts that don't have their own line, unlike how Starship has its own line.
 
 ## Installation
 
