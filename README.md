@@ -2,6 +2,8 @@
 
 `aishell` is a smart shell assistant that understands commands sent to the shell. If a command fails or is typed incorrectly (e.g., "gerp" instead of "grep"), `aishell` suggests a fix for the command. The fix is placed into the shell history, so the user can press the up arrow and hit enter to execute the corrected command.
 
+![Image of using it in your shell.](image.png)
+
 ## Installation
 
 To install `aishell` on Ubuntu using bash, follow these steps:
