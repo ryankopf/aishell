@@ -36,7 +36,8 @@ for shell_config in "$USER_HOME/.bashrc" "$USER_HOME/.zshrc"; do
             echo '    echo "No suggestion available."' >> "$shell_config"
             echo '  fi' >> "$shell_config"
             echo '}' >> "$shell_config"
-            echo 'bind -x \'"\\C-t":aishell_suggestion\'' >> "$shell_config"
+            #echo 'bind -x \'"\\C-t":aishell_suggestion\'' >> "$shell_config"
+            printf "bind -x '\\\"\\\\C-t\\\":aishell_suggestion'\n" >> "$shell_config"
         else
             echo "aishell already initialized in $shell_config"
         fi
