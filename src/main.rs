@@ -169,7 +169,7 @@ aishell_suggestion() {
     echo "No suggestion available."
   fi
 }
-bind -x '\"\\C-t\":aishell_suggestion'
+bind -x '"\C-t": aishell_suggestion'
 "#;
 
     for shell_config in shell_configs {

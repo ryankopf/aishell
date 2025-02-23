@@ -1,6 +1,6 @@
 [package]
 name = "aishell"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "A shell that understands and suggests fixes for failed commands."
 license = "MIT"
