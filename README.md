@@ -14,6 +14,16 @@
 
 1. Support more systems. Perhaps we can detect the length of the prompt to support prompts that don't have their own line, unlike how Starship has its own line.
 
+## New Installation
+
+```sh
+cargo install aishell
+```
+
+```
+aishell add-to-shell
+```
+
 ## Installation
 
 To install `aishell` on Ubuntu using bash, follow these steps:

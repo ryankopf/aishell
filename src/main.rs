@@ -4,11 +4,12 @@ use std::io::{self, Write};
 use std::process::{Command, Stdio};
 use tokio::runtime::Runtime;
 use nix::unistd::{fork, ForkResult, setsid};
+use std::fs::{self, OpenOptions};
+use std::path::Path;
 mod ai;
 
-/// The idea of this program is that it will, in the future, understand all commands sent to the shell, and
-/// if they fail, or the command was typed wrong like "gerp" instead of "grep" it will be able to suggest a fix for the command.
-/// It will put the fix into the up history, so the user can just press the up arrow and hit enter to execute the command.
+/// This program receives all commands sent to the shell, if that command returns an error,
+/// or the command was typed wrong like "gerp" instead of "grep" it will be able to suggest a fix for the command.
 
 fn main() {
     let args: Vec<String> = env::args().skip(1).collect();
@@ -17,6 +18,17 @@ fn main() {
         return;
     }
 
+    // The 'add-to-shell' command adds aishell to the user's shell config
+    // It should be called once, and then the user should restart their shell
+    if args[0] == "add-to-shell" {
+        let user_home = std::env::var("HOME").expect("Failed to get HOME directory");
+        if let Err(e) = add_to_shell_config(&user_home) {
+            eprintln!("Error: {}", e);
+        }
+    }
+
+    // The 'init' command tells the shell how to call aishell
+    // It should be called in the shell's init file, e.g. ~/.bashrc or ~/.zshrc
     if args[0] == "init" {
         if args.len() < 2 {
             eprintln!("Usage: aishell init <shell>");
@@ -131,4 +143,46 @@ fn init_shell(shell: &str) {
         }
         _ => eprintln!("Shell not supported"),
     }
+}
+
+fn add_to_shell_config(user_home: &str) -> io::Result<()> {
+    println!("Initializing aishell for user...");
+    
+    let shell_configs = vec![
+        format!("{}/.bashrc", user_home),
+        format!("{}/.zshrc", user_home),
+    ];
+
+    let aishell_init = "eval \"$(aishell init bash)\"";
+    let aishell_function = r#"
+aishell_suggestion() {
+  local suggestion_file="/tmp/aishell_suggestion"
+  if [ -f "$suggestion_file" ]; then
+    fix=$(< "$suggestion_file")
+    rm -f "$suggestion_file"
+    READLINE_LINE="$fix"
+    READLINE_POINT=${#fix}
+  else
+    echo "No suggestion available."
+  fi
+}
+bind -x '\"\\C-t\":aishell_suggestion'
+"#;
+
+    for shell_config in shell_configs {
+        let path = Path::new(&shell_config);
+        if path.exists() {
+            let content = fs::read_to_string(path)?;
+            if !content.contains("eval \"$(aishell init") {
+                println!("Adding aishell init to {}", shell_config);
+                let mut file = OpenOptions::new().append(true).open(path)?;
+                writeln!(file, "{}", aishell_init)?;
+                writeln!(file, "{}", aishell_function)?;
+            } else {
+                println!("aishell already initialized in {}", shell_config);
+            }
+        }
+    }
+    
+    Ok(())
 }
