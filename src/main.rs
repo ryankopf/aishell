@@ -21,6 +21,9 @@ fn main() {
     // The 'add-to-shell' command adds aishell to the user's shell config
     // It should be called once, and then the user should restart their shell
     if args[0] == "add-to-shell" {
+        if let None = env::var_os("OPENAI_API_KEY") {
+            eprintln!("Warning: OPENAI_API_KEY environment variable is not set.");
+        }
         let user_home = std::env::var("HOME").expect("Failed to get HOME directory");
         if let Err(e) = add_to_shell_config(&user_home) {
             eprintln!("Error: {}", e);
